@@ -11,14 +11,16 @@ export default async function handler(req, res) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-  model: "gpt-4o-mini",
-  ...req.body
-}),
+        model: "gpt-4o-mini",
+        messages: req.body.messages,
+      }),
+    });
 
     const data = await response.json();
 
     return res.status(200).json(data);
   } catch (error) {
+    console.error(error);
     return res.status(500).json({ error: "Server error" });
   }
 }
