@@ -4,6 +4,8 @@ export default async function handler(req, res) {
   }
 
   try {
+    const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -12,7 +14,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
-        messages: req.body.messages,
+        messages: body.messages,
       }),
     });
 
@@ -20,7 +22,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json(data);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Server error" });
+    console.error("ERROR:", error);
+    return res.status(500).json({ error: "Server error", details: error.message });
   }
 }
